@@ -22,7 +22,7 @@ Xiaohong Liu,
   <a href="https://arxiv.org/abs/2602.04300">
     <img src="https://img.shields.io/badge/Paper-arXiv-red?logo=arxiv&logoSvg">
   </a>
-  <a href="https://github.com/gobunu/Light-Up-Your-Face/releases/download/Paper/supp.pdf">
+  <a href="https://github.com/gobunu/Light-Up-Your-Face/releases/download/Paper/LightFace_supp.pdf">
     <img src="https://img.shields.io/badge/Supplementary_material-Paper-orange.svg">
   </a>
   <a href="https://github.com/gobunu/Light-Up-Your-Face/releases">
