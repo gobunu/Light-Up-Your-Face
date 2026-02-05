@@ -67,7 +67,7 @@ Xiaohong Liu,
 ---
 
 <p align="center">
-  <img src="images/vis1.png" alt="Dataset Pipeline" style="width:100%;"/><br>
+  <img src="images/vis1.png" alt="Dataset Pipeline" style="width:90%;"/><br>
    Fill-light control. We move a virtual light along a circular path and increase color temperature, with fixed beam shape. Labels show (Δx, Δy, T) in pixels and Kelvin.
 </p>
 
