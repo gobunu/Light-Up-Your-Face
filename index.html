@@ -155,6 +155,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 9px;
       min-height: 40px;
       padding: 8px 18px;
       border-radius: 999px;
@@ -171,18 +172,31 @@
       text-decoration: none;
     }
 
-    .button span {
+    .button-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 21px;
       height: 21px;
-      margin-right: 8px;
       border-radius: 50%;
       color: #333333;
       background: #ffffff;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
+    }
+
+    .button-icon svg {
+      display: block;
+      width: 14px;
+      height: 14px;
+    }
+
+    .button-icon svg * {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .button-label {
+      display: inline-block;
     }
 
     .band {
@@ -476,10 +490,40 @@
       <div class="venue">ICML 2026</div>
 
       <div class="actions" aria-label="Project links">
-        <a class="button" href="https://arxiv.org/pdf/2602.04300"><span>PDF</span>Paper</a>
-        <a class="button" href="https://arxiv.org/abs/2602.04300"><span>X</span>arXiv</a>
-        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face/releases/download/Paper/LightFace_supp.pdf"><span>PDF</span>Supplementary</a>
-        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face"><span>&lt;/&gt;</span>Code</a>
+        <a class="button" href="https://arxiv.org/pdf/2602.04300" target="_blank" rel="noopener">
+          <span class="button-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+              <path d="M14 2v5h5"></path>
+              <path d="M8 16h8"></path>
+              <path d="M8 12h8"></path>
+            </svg>
+          </span>
+          <span class="button-label">Paper</span>
+        </a>
+        <a class="button" href="https://arxiv.org/abs/2602.04300" target="_blank" rel="noopener">
+          <span class="button-icon arxiv-icon" aria-hidden="true">X</span>
+          <span class="button-label">arXiv</span>
+        </a>
+        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face/releases/download/Paper/LightFace_supp.pdf" target="_blank" rel="noopener">
+          <span class="button-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+              <path d="M14 2v5h5"></path>
+              <path d="M8 16h8"></path>
+              <path d="M8 12h8"></path>
+            </svg>
+          </span>
+          <span class="button-label">Supplementary</span>
+        </a>
+        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face" target="_blank" rel="noopener">
+          <span class="button-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.12c-3.13.68-3.8-1.35-3.8-1.35-.5-1.29-1.25-1.63-1.25-1.63-1.02-.7.08-.69.08-.69 1.13.08 1.73 1.17 1.73 1.17 1.01 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.72-1.5-2.5-.28-5.12-1.25-5.12-5.55 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.7 10.7 0 0 1 5.65 0c2.15-1.45 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.31-2.63 5.26-5.14 5.54.41.35.77 1.03.77 2.08v3.12c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8z"></path>
+            </svg>
+          </span>
+          <span class="button-label">Code</span>
+        </a>
       </div>
     </div>
   </header>
