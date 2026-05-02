@@ -20,7 +20,7 @@ Xiaohong Liu,
 
 <p align="center">
   <a href="https://gobunu.github.io/Light-Up-Your-Face/">
-    <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgobunu%2FLight-Up-Your-Face%2Fmain%2Fimages%2Fproject_page_badge.json&cacheSeconds=300">
+    <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgobunu%2FLight-Up-Your-Face%2Fmain%2Fimages%2Flight_up_your_face_page_badge.json&cacheSeconds=300">
   </a>
   <a href="https://arxiv.org/abs/2602.04300">
     <img src="https://img.shields.io/badge/Paper-arXiv-red?logo=arxiv&logoSvg">
