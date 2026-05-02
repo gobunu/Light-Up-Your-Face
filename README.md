@@ -19,6 +19,9 @@ Xiaohong Liu,
 </p>
 
 <p align="center">
+  <a href="https://gobunu.github.io/Light-Up-Your-Face/">
+    <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgobunu%2FLight-Up-Your-Face%2Fmain%2Fimages%2Fproject_page_badge.json">
+  </a>
   <a href="https://arxiv.org/abs/2602.04300">
     <img src="https://img.shields.io/badge/Paper-arXiv-red?logo=arxiv&logoSvg">
   </a>
@@ -39,7 +42,8 @@ Xiaohong Liu,
 
 #### 🔥🔥🔥 News
 
-- **2025-02-05:** This repo is released.
+- **2026-04-30**: 🎉 Light Up Your Face has been accepted to **ICML 2026**.
+- **2026-02-05:** This repo is released.
 ---
 
 > **Abstract:** Face fill-light enhancement (FFE) brightens underexposed faces by adding virtual fill light while keeping the original scene illumination and background unchanged. Most face relighting methods aim to reshape overall lighting, which can suppress the input illumination or modify the entire scene, leading to foreground-background inconsistency and mismatching practical FFE needs. To support scalable learning, we introduce LightYourFace-160K (LYF-160K), a large-scale paired dataset built with a physically consistent renderer that injects a disk-shaped area fill light controlled by six disentangled factors, producing 160K before-and-after pairs. We first pretrain a physics-aware lighting prompt (PALP) that embeds the 6D parameters into conditioning tokens, using an auxiliary planar-light reconstruction objective. Building on a pretrained diffusion backbone, we then train a fill-light diffusion (FiLitDiff), an efficient one-step model conditioned on physically grounded lighting codes, enabling controllable and high-fidelity fill lighting at low computational cost. Experiments on held-out paired sets demonstrate strong perceptual quality and competitive full-reference metrics, while better preserving background illumination.
@@ -130,10 +134,10 @@ The model **FiLitDiff** achieved state-of-the-art performance on both the datase
 If you find the code helpful in your research or work, please cite the following paper.
 
 ```bibtex
-@article{gong2026lightface,
+@inproceedings{gong2026lightface,
     title={{Light Up Your Face: A Physically Consistent Dataset and Diffusion Model for Face Fill-Light Enhancement}},
     author={Gong, Jue and Zhou, Zihan and Wang, Jingkai and Liu, Xiaohong and Zhang, Yulun and Yang, Xiaokang},
-    journal={arXiv preprint 2602.04300},
+    booktitle={International Conference on Machine Learning (ICML)},
     year={2026}
 }
 ```
