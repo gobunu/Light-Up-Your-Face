@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Light Up Your Face</title>
+  <meta name="description" content="Light Up Your Face: A Physically Consistent Dataset and Diffusion Model for Face Fill-Light Enhancement. Accepted to ICML 2026.">
+  <meta property="og:title" content="Light Up Your Face">
+  <meta property="og:description" content="A physically consistent dataset and one-step diffusion model for controllable face fill-light enhancement.">
+  <meta property="og:image" content="images/vis1.png">
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      --ink: #333333;
+      --muted: #5b6370;
+      --blue: #1772d0;
+      --blue-dark: #135da8;
+      --line: #e4e4e4;
+      --soft: #f5f5f5;
+      --warm: #b96d2c;
+      --paper: #ffffff;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--blue-dark);
+      text-decoration: underline;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 630px;
+      padding: 32px 24px 54px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.78) 30%, rgba(255, 255, 255, 0.88) 52%, rgba(255, 255, 255, 0.68) 76%, rgba(255, 255, 255, 0.36)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.82)),
+        url("images/hero-lighting-bg.jpg") center / cover no-repeat;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 auto 30px;
+      color: #1d5f9e;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 50px;
+      font-style: italic;
+      line-height: 1;
+    }
+
+    .logo-icon {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      filter: drop-shadow(0 6px 14px rgba(12, 42, 75, 0.16));
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto 22px;
+      color: #333333;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .authors {
+      max-width: 880px;
+      margin: 0 auto;
+      font-size: 21px;
+      line-height: 1.7;
+    }
+
+    .authors a {
+      white-space: nowrap;
+    }
+
+    .tagline {
+      max-width: 880px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .venue {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      max-width: 720px;
+      margin: 34px auto 32px;
+      color: #2e6fd7;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+
+    .venue::before,
+    .venue::after {
+      content: "";
+      height: 1px;
+      background: var(--line);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      color: #ffffff;
+      background: #333333;
+      font-size: 17px;
+      line-height: 1;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
+    }
+
+    .button:hover {
+      color: #ffffff;
+      background: #111111;
+      text-decoration: none;
+    }
+
+    .button span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 21px;
+      height: 21px;
+      margin-right: 8px;
+      border-radius: 50%;
+      color: #333333;
+      background: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .band {
+      padding: 52px 24px 58px;
+      background: var(--soft);
+    }
+
+    .section {
+      padding: 68px 24px;
+      background: #ffffff;
+    }
+
+    .section.soft {
+      background: var(--soft);
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin: 0 0 26px;
+      color: #444444;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0;
+      text-align: center;
+    }
+
+    h3 {
+      margin: 28px 0 16px;
+      color: #4a4a4a;
+      font-size: 22px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    p {
+      margin: 0 0 18px;
+    }
+
+    .lead-text {
+      max-width: 880px;
+      margin: 0 auto;
+      color: #2f2f2f;
+      font-size: 20px;
+      line-height: 1.78;
+      text-align: justify;
+    }
+
+    .lead-text strong {
+      color: #222222;
+    }
+
+    .figure {
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .figure.no-shadow {
+      box-shadow: none;
+      border: 1px solid #dddddd;
+    }
+
+    .figure img {
+      width: 100%;
+      background: #ffffff;
+    }
+
+    .caption {
+      margin: 0;
+      padding: 10px 14px 13px;
+      color: #5b6370;
+      font-size: 15px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .example-title {
+      margin-bottom: 28px;
+    }
+
+    .method-lead {
+      max-width: 920px;
+      margin: 0 auto 30px;
+      color: #4a4a4a;
+      font-size: 19px;
+      line-height: 1.75;
+      text-align: justify;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+      margin-top: 26px;
+    }
+
+    details {
+      max-width: 1040px;
+      margin: 18px auto 0;
+      color: #333333;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 6px 0;
+    }
+
+    .details-content {
+      padding: 18px 0 0 30px;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 18px;
+    }
+
+    .table-stack {
+      display: grid;
+      gap: 22px;
+      margin-top: 12px;
+    }
+
+    .bibtex-wrap {
+      position: relative;
+      max-width: 1040px;
+      margin: 0 auto;
+      background: #ffffff;
+    }
+
+    pre {
+      margin: 0;
+      padding: 28px 92px 28px 28px;
+      overflow-x: auto;
+      color: #333333;
+      background: #ffffff;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .copy {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 0;
+      border-radius: 3px;
+      color: #ffffff;
+      background: #2f6bd6;
+      padding: 9px 15px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    footer {
+      padding: 40px 24px 54px;
+      color: #4f4f4f;
+      background: #ffffff;
+      font-size: 16px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        font-size: 16px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 26px 18px 40px;
+        background-position: center, center, right center;
+      }
+
+      .wordmark {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+        font-size: 38px;
+      }
+
+      .logo-icon {
+        width: 70px;
+        height: 70px;
+      }
+
+      h1 {
+        font-size: 31px;
+      }
+
+      .authors {
+        font-size: 17px;
+      }
+
+      .tagline {
+        font-size: 16px;
+      }
+
+      .venue {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 24px auto;
+        font-size: 26px;
+      }
+
+      .venue::before,
+      .venue::after {
+        width: 70%;
+        margin: 0 auto;
+      }
+
+      .actions {
+        gap: 8px;
+      }
+
+      .button {
+        min-width: 130px;
+        font-size: 15px;
+      }
+
+      .band,
+      .section {
+        padding: 42px 18px;
+      }
+
+      h2 {
+        font-size: 30px;
+      }
+
+      .lead-text,
+      .method-lead {
+        font-size: 17px;
+        text-align: left;
+      }
+
+      .method-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-content {
+        padding-left: 0;
+      }
+
+      pre {
+        padding: 54px 18px 22px;
+        font-size: 12px;
+      }
+
+      .copy {
+        right: 12px;
+        top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="wordmark" aria-label="Light Up Your Face">
+        <img class="logo-icon" src="images/light-up-your-face-logo.png" alt="" aria-hidden="true">
+        <span>Light Up Your Face</span>
+      </div>
+
+      <h1>Light Up Your Face: A Physically Consistent Dataset and Diffusion Model for Face Fill-Light Enhancement</h1>
+
+      <p class="authors">
+        <a href="https://github.com/gobunu">Jue Gong</a>,
+        <a href="https://github.com/littletoilet">Zihan Zhou</a>,
+        <a href="https://github.com/jkwang28">Jingkai Wang</a>,
+        Xiaohong Liu,
+        <a href="http://yulunzhang.com/">Yulun Zhang</a>,
+        <a href="https://scholar.google.com/citations?user=yDEavdMAAAAJ">Xiaokang Yang</a>
+      </p>
+
+      <p class="tagline">A physically grounded one-step diffusion method for controllable face fill-light enhancement, trained on a 160K-pair dataset with 6D area-disk lighting control and physics-aware conditioning.</p>
+
+      <div class="venue">ICML 2026</div>
+
+      <div class="actions" aria-label="Project links">
+        <a class="button" href="https://arxiv.org/pdf/2602.04300"><span>PDF</span>Paper</a>
+        <a class="button" href="https://arxiv.org/abs/2602.04300"><span>X</span>arXiv</a>
+        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face/releases/download/Paper/LightFace_supp.pdf"><span>PDF</span>Supplementary</a>
+        <a class="button" href="https://github.com/gobunu/Light-Up-Your-Face"><span>&lt;/&gt;</span>Code</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="band">
+    <div class="container">
+      <h2 class="example-title">Face Fill-Light Enhancement</h2>
+      <figure class="figure">
+        <img src="images/vis1.png" alt="Controllable face fill-light enhancement examples with virtual light movement and temperature change.">
+        <figcaption class="caption">Controllable fill-light enhancement with virtual area-light position and color-temperature control.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="abstract">
+    <div class="container">
+      <h2>Abstract</h2>
+      <div class="lead-text">
+        <p>Face fill-light enhancement (FFE) brightens underexposed faces by adding virtual fill light while keeping the original scene illumination and background unchanged. Most face relighting methods aim to reshape overall lighting, which can suppress the input illumination or modify the entire scene, leading to foreground-background inconsistency and mismatching practical FFE needs.</p>
+        <p>To support scalable learning, we introduce <strong>LightYourFace-160K (LYF-160K)</strong>, a large-scale paired dataset built with a physically consistent renderer that injects a disk-shaped area fill light controlled by six disentangled factors, producing 160K before-and-after pairs.</p>
+        <p>We first pretrain a physics-aware lighting prompt (PALP) that embeds the 6D parameters into conditioning tokens, using an auxiliary planar-light reconstruction objective. Building on a pretrained diffusion backbone, we then train <strong>FiLitDiff</strong>, an efficient one-step diffusion model conditioned on physically grounded lighting codes, enabling controllable and high-fidelity fill lighting at low computational cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="method">
+    <div class="container">
+      <h2>Method</h2>
+      <p class="method-lead">We build paired supervision with a physically consistent fill-light renderer and learn a diffusion model whose conditioning follows the same lighting parameterization. The renderer provides controllable disk-shaped area-light supervision, while PALP and FiLitDiff translate the physical controls into one-step face fill-light enhancement.</p>
+
+      <h3>Dataset pipeline and physically consistent renderer</h3>
+      <figure class="figure no-shadow">
+        <img src="images/dataset_pipeline.png" alt="Pipeline for building the physically consistent face fill-light dataset.">
+      </figure>
+
+      <div class="method-grid">
+        <figure class="figure no-shadow">
+          <img src="images/params.png" alt="Six-dimensional area-disk lighting parameterization.">
+          <figcaption class="caption">Six-dimensional area-disk lighting parameterization.</figcaption>
+        </figure>
+        <figure class="figure no-shadow">
+          <img src="images/framework.png" alt="Training framework for physics-aware lighting prompts and FiLitDiff.">
+          <figcaption class="caption">Physics-aware conditioning and one-step fill-light diffusion framework.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="results">
+    <div class="container">
+      <h2>Results</h2>
+      <p class="method-lead">FiLitDiff achieves strong full-reference metrics and perceptual quality on LYF-Val and LYF-EditVal while preserving the original scene and background illumination. Detailed quantitative and visual comparisons are available in the paper.</p>
+
+      <details>
+        <summary>Quantitative Comparisons</summary>
+        <div class="details-content table-stack">
+          <figure class="figure no-shadow">
+            <img src="images/tab1.png" alt="Quantitative comparison table on LYF-Val.">
+            <figcaption class="caption">Quantitative evaluation on LYF-Val.</figcaption>
+          </figure>
+          <figure class="figure no-shadow">
+            <img src="images/tab2.png" alt="Quantitative comparison table on LYF-EditVal.">
+            <figcaption class="caption">Quantitative evaluation on LYF-EditVal.</figcaption>
+          </figure>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Visual Comparisons</summary>
+        <div class="details-content results-grid">
+          <figure class="figure no-shadow">
+            <img src="images/vis2.png" alt="Visual comparison on LYF-Val.">
+            <figcaption class="caption">Visual comparison on LYF-Val.</figcaption>
+          </figure>
+          <figure class="figure no-shadow">
+            <img src="images/vis3.png" alt="Visual comparison on LYF-EditVal.">
+            <figcaption class="caption">Visual comparison on LYF-EditVal.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="section soft" id="bibtex">
+    <div class="container">
+      <h2>BibTeX</h2>
+      <div class="bibtex-wrap">
+        <button class="copy" type="button" data-copy="#citation">Copy</button>
+        <pre id="citation">@inproceedings{gong2026lightface,
+  title={{Light Up Your Face: A Physically Consistent Dataset and Diffusion Model for Face Fill-Light Enhancement}},
+  author={Gong, Jue and Zhou, Zihan and Wang, Jingkai and Liu, Xiaohong and Zhang, Yulun and Yang, Xiaokang},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    This page follows a lightweight academic project page layout.
+  </footer>
+
+  <script>
+    (function () {
+      document.querySelectorAll("[data-copy]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var target = document.querySelector(button.getAttribute("data-copy"));
+          if (!target || !navigator.clipboard) return;
+          navigator.clipboard.writeText(target.textContent).then(function () {
+            var original = button.textContent;
+            button.textContent = "Copied";
+            setTimeout(function () {
+              button.textContent = original;
+            }, 1400);
+          });
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
