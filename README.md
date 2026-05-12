@@ -8,8 +8,8 @@ Light Up Your Face: A Physically Consistent Dataset<br>and Diffusion Model for F
 <p align="center">
 <a href="https://github.com/gobunu">Jue Gong</a>, 
 <a href="https://github.com/littletoilet">Zihan Zhou</a>, 
-<a href="https://github.com/jkwang28">Jingkai Wang</a>, 
-Xiaohong Liu,  
+<a href="https://github.com/jkwang28">Jingkai Wang</a>,
+<a href="https://jhc.sjtu.edu.cn/~xiaohongliu/">Xiaohong Liu</a>, 
 <a href="http://yulunzhang.com/">Yulun Zhang</a>, 
 <a href="https://scholar.google.com/citations?user=yDEavdMAAAAJ">Xiaokang Yang</a>
 </p>
