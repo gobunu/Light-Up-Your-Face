@@ -83,18 +83,73 @@ Light Up Your Face: A Physically Consistent Dataset<br>and Diffusion Model for F
 
 ## ⚒️ TODO
 
-* [ ] Release code and pretrained models.
+* [x] Prepare FiLitDiff inference code.
+* [ ] Release pretrained models.
 * [ ] Release LYF-160K training data, and LYF-Val and LYF-EditVal sets.
 
 ## 🔗 Contents
 
-- [ ] Models
+- [x] [Installation](#installation)
+- [x] [Models](#models)
+- [x] [Inference](#inference)
 - [ ] Test Set
 - [ ] Training
 - [x] [Results](#results)
 - [x] [Citation](#citation)
 - [ ] [Acknowledgements](#acknowledgements)
 
+
+## <a name="installation"></a>⚙️ Installation
+
+```bash
+conda create -n lightface python=3.11 -y
+conda activate lightface
+pip install torch==2.2.0 --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
+```
+
+## <a name="models"></a>🧩 Models
+
+FiLitDiff combines a Stable Diffusion 2.1 base backbone with a learned fill-light LoRA and the physics-aware lighting prompt (PALP). Place the two FiLitDiff weights from the same checkpoint in one directory:
+
+```text
+weights/FiLitDiff/
+├── pytorch_lora_weights.safetensors
+└── img_encoder_weights.pth
+```
+
+Prepare the Stable Diffusion 2.1 base model in Diffusers format, including its `unet`, `vae`, and `scheduler` subfolders. The inference command accepts either a local base-model directory or a Hugging Face model ID through `--base-model`.
+
+## <a name="inference"></a>💡 Inference
+
+Enhance an image with six-dimensional lighting control and adjustable fill-light strength:
+
+```bash
+python inference.py \
+  --input examples/portrait.png \
+  --output outputs \
+  --checkpoint weights/FiLitDiff \
+  --base-model weights/stable-diffusion-2-1-base \
+  --cond6d 0,0,0,0,0,0.3 \
+  --strength 0.5
+```
+
+Set `--strength` to control fill-light intensity; the default value `1` saves the model prediction directly.
+
+### Lighting control
+
+PALP encodes disk-light geometry, beam angle, and color temperature. `--cond6d` takes the normalized parameters in the following order:
+
+| Parameter | Unit | Normalization |
+| :--- | :--- | :--- |
+| Disk diameter | px | `diameter / 200 - 1` |
+| Plane distance | px | `distance / 1000 - 1` |
+| Horizontal offset | px | `x / 3000` |
+| Vertical offset | px | `y / 3000` |
+| Half-peak angle | degrees | `angle / 40 - 1` |
+| Color temperature | K | `temperature / 8000 - 1` |
+
+Use `--light-params` to specify physical values in the same parameter order.
 
 ## <a name="results"></a>🔎 Results
 
