@@ -84,8 +84,8 @@ Light Up Your Face: A Physically Consistent Dataset<br>and Diffusion Model for F
 ## ⚒️ TODO
 
 * [x] Prepare FiLitDiff inference code.
-* [ ] Release pretrained models.
-* [ ] Release LYF-160K training data, and LYF-Val and LYF-EditVal sets.
+* [x] Release pretrained models.
+* [x] Release LYF-160K training data, and LYF-Val and LYF-EditVal sets.
 
 ## 🔗 Contents
 
@@ -118,6 +118,14 @@ weights/FiLitDiff/
 └── img_encoder_weights.pth
 ```
 
+Download the pretrained FiLitDiff weights from [Hugging Face](https://huggingface.co/GOBUNU/Light-Up-Your-Face):
+
+```bash
+huggingface-cli download GOBUNU/Light-Up-Your-Face \
+  --include "*.pth" "*.safetensors" \
+  --local-dir weights/FiLitDiff
+```
+
 Prepare the Stable Diffusion 2.1 base model in Diffusers format, including its `unet`, `vae`, and `scheduler` subfolders. The inference command accepts either a local base-model directory or a Hugging Face model ID through `--base-model`.
 
 ## <a name="inference"></a>💡 Inference
@@ -135,6 +143,40 @@ python inference.py \
 ```
 
 Set `--strength` to control fill-light intensity; the default value `1` saves the model prediction directly.
+
+### Dataset inference
+
+The [LightYourFace-160K release](https://huggingface.co/datasets/GOBUNU/LightYourFace-160K) provides `metadata.jsonl` with physical lighting parameters for each sample. Extract the desired archive and pass its metadata to process each lighting variant with its own condition.
+
+LYF-EditVal includes its edited input portraits alongside the metadata:
+
+```bash
+huggingface-cli download GOBUNU/LightYourFace-160K LYF-EditVal.tar.gz \
+  --repo-type dataset --local-dir datasets/LightYourFace-160K
+mkdir -p datasets/LightYourFace-160K/LYF-EditVal
+tar -xzf datasets/LightYourFace-160K/LYF-EditVal.tar.gz \
+  -C datasets/LightYourFace-160K/LYF-EditVal
+python inference.py \
+  --metadata datasets/LightYourFace-160K/LYF-EditVal/metadata.jsonl \
+  --output outputs/LYF-EditVal \
+  --checkpoint weights/FiLitDiff \
+  --base-model weights/stable-diffusion-2-1-base
+```
+
+For LYF-Val, supply the corresponding validation input portraits through `--input-dir`. By default, inputs are named `{source_id}.png`:
+
+```bash
+python inference.py \
+  --metadata datasets/LightYourFace-160K/LYF-Val/metadata.jsonl \
+  --input-dir datasets/celeba_validation_inputs \
+  --output outputs/LYF-Val \
+  --checkpoint weights/FiLitDiff \
+  --base-model weights/stable-diffusion-2-1-base
+```
+
+If portraits retain different filenames, provide `--input-map inputs.json` with a JSON object mapping each metadata `source_id` to its corresponding image path. For example, `{"00000007": "portraits/face.jpg"}` selects that file relative to `--input-dir`, or to the metadata directory when `--input-dir` is omitted. Absolute image paths are also supported. Use the verified source correspondence to construct this mapping.
+
+Metadata inference reads each row's six physical parameters and applies the normalization below. Predictions are saved as `{source_id}_{variant}.png`, so multiple lighting settings for the same portrait have separate outputs. This mode reads the input portraits and metadata; lighting-component images are used for target reconstruction during evaluation. Use `--cond6d` or `--light-params` with the single-image or folder interface; metadata supplies these values per record.
 
 ### Lighting control
 
